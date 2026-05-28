@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit profile</h2>
+
+<div class="row">
+  <div class="col-lg-8">
+    <form method="POST" class="card shadow-sm p-3">
+      <h5 class="mb-3">Basic information</h5>
+
+      <div class="mb-3">
+        <label class="form-label">Name <span class="text-danger">*</span></label>
+        <input type="text" name="name" class="form-control" value="{{ current_user.name }}" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email <span class="text-danger">*</span></label>
+        <input type="email" name="email" class="form-control" value="{{ current_user.email }}" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Phone</label>
+        <input type="text" name="phone" class="form-control" value="{{ current_user.phone or '' }}" placeholder="Optional">
+      </div>
+
+      <hr>
+      <h5 class="mb-3">Education & work</h5>
+
+      <div class="mb-3">
+        <label class="form-label">College</label>
+        <input type="text" name="college" class="form-control" value="{{ current_user.college or '' }}">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Role</label>
+        <input type="text" name="role" class="form-control"
+               value="{{ current_user.role or '' }}" placeholder="UG/MBA student, recent graduate, working professional">
+      </div>
+
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="is_alumni" name="is_alumni"
+               {% if current_user.is_alumni %}checked{% endif %}>
+        <label class="form-check-label" for="is_alumni">
+          I am an alumnus/alumna of this college
+        </label>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Batch / Graduation year</label>
+        <input type="text" name="batch_year" class="form-control"
+               value="{{ current_user.batch_year or '' }}" placeholder="e.g., 2024 or 2019–2021">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Current organisation</label>
+        <input type="text" name="organisation" class="form-control"
+               value="{{ current_user.organisation or '' }}" placeholder="Company / startup / institute (optional)">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Designation / role</label>
+        <input type="text" name="designation" class="form-control"
+               value="{{ current_user.designation or '' }}" placeholder="e.g., Product intern, Analyst, Founder">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Short summary</label>
+        <textarea name="summary" class="form-control" rows="3"
+                  placeholder="Optional: a quick line about yourself">{{ current_user.summary or '' }}</textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="{{ url_for('profile') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

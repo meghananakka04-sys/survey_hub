@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit survey</h2>
+
+<form method="POST" class="card shadow-sm p-3">
+  <div class="mb-3">
+    <label class="form-label">Title <span class="text-danger">*</span></label>
+    <input type="text" name="title" class="form-control" required value="{{ survey.title }}">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Description <span class="text-danger">*</span></label>
+    <textarea name="description" class="form-control" rows="4" required>{{ survey.description }}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">External survey link (Google Form, etc.) <span class="text-danger">*</span></label>
+    <input type="url" name="external_link" class="form-control" required value="{{ survey.external_link }}">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Purpose / Type <span class="text-danger">*</span></label>
+    <select name="type" class="form-select" required>
+      <option value="course_project" {% if survey.type == 'course_project' %}selected{% endif %}>Course / academic project</option>
+      <option value="competition_event" {% if survey.type == 'competition_event' %}selected{% endif %}>Case competition / event</option>
+      <option value="research_academic" {% if survey.type == 'research_academic' %}selected{% endif %}>Research / dissertation / paper</option>
+      <option value="personal_side" {% if survey.type == 'personal_side' %}selected{% endif %}>Personal / side project</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Space <span class="text-danger">*</span></label>
+    <select name="space" class="form-select" required>
+      <option value="case_comps" {% if survey.space == 'case_comps' %}selected{% endif %}>Case comps & related surveys</option>
+      <option value="college_surveys" {% if survey.space == 'college_surveys' %}selected{% endif %}>College / academic surveys</option>
+      <option value="general_research" {% if survey.space == 'general_research' %}selected{% endif %}>General research</option>
+      <option value="self_projects" {% if survey.space == 'self_projects' %}selected{% endif %}>Self / side project surveys</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Domain tags</label>
+    <input type="text" name="domain_tags" class="form-control"
+           value="{{ survey.domain_tags or '' }}" placeholder="marketing, strategy, ops (optional)">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Target audience</label>
+    <input type="text" name="target_audience" class="form-control"
+           value="{{ survey.target_audience or '' }}" placeholder="MBA students, freshers, etc. (optional)">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Time to complete</label>
+    <select name="time_estimate" class="form-select">
+      <option value="" {% if not survey.time_estimate %}selected{% endif %}>Any</option>
+      <option value="<3" {% if survey.time_estimate == '<3' %}selected{% endif %}>&lt; 3 minutes</option>
+      <option value="3-5" {% if survey.time_estimate == '3-5' %}selected{% endif %}>3–5 minutes</option>
+      <option value="5-10" {% if survey.time_estimate == '5-10' %}selected{% endif %}>5–10 minutes</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">College</label>
+    <input type="text" name="college" class="form-control"
+           value="{{ survey.college or '' }}" placeholder="Optional">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Context (course / competition / project name)</label>
+    <input type="text" name="context_info" class="form-control"
+           value="{{ survey.context_info or '' }}" placeholder="Optional">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Deadline (last date for responses)</label>
+    <input type="date" name="deadline" class="form-control"
+           value="{{ survey.deadline if survey.deadline }}">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save changes</button>
+  <a href="{{ url_for('survey_detail', survey_id=survey.id) }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}

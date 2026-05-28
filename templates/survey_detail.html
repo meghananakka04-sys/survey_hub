@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="card-title">{{ survey.title }}</h3>
+        <p class="mb-2">
+          <span class="badge bg-info text-dark">{{ survey.space or 'General' }}</span>
+          <span class="badge bg-secondary">
+            {% if survey.type == 'course_project' %}Course / academic project{% elif survey.type == 'competition_event' %}Case competition / event{% elif survey.type == 'research_academic' %}Research / dissertation / paper{% elif survey.type == 'personal_side' %}Personal / side project{% else %}{{ survey.type }}{% endif %}
+          </span>
+          {% if survey.time_estimate %}
+          <span class="badge bg-light text-dark">{{ survey.time_estimate }} min</span>
+          {% endif %}
+        </p>
+        <p class="text-muted small mb-2">
+          Created by {{ survey.creator.name }}
+          {# {% if survey.creator.college %} · {{ survey.creator.college }}{% endif %} #}
+        </p>
+        {% if survey.domain_tags %}
+        <p class="small"><strong>Domains:</strong> {{ survey.domain_tags }}</p>
+        {% endif %}
+        {% if survey.target_audience %}
+        <p class="small"><strong>Target audience:</strong> {{ survey.target_audience }}</p>
+        {% endif %}
+        {% if survey.context_info %}
+        <p class="small"><strong>Context:</strong> {{ survey.context_info }}</p>
+        {% endif %}
+        {% if survey.deadline %}
+        <p class="small"><strong>Deadline:</strong> {{ survey.deadline }}</p>
+        {% endif %}
+
+        <hr>
+        <p class="card-text">{{ survey.description }}</p>
+
+        <a href="{{ url_for('open_survey', survey_id=survey.id) }}" target="_blank" class="btn btn-primary mt-2">
+          Open survey form
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

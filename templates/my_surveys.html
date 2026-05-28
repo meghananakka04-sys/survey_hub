@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My surveys</h2>
+
+{% if surveys %}
+    {% for s in surveys %}
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{ url_for('survey_detail', survey_id=s.id) }}" class="text-decoration-none">
+                        {{ s.title }}
+                    </a>
+                </h5>
+                <p class="mb-1 small text-muted">
+                    {% if s.type == 'course_project' %}Course / academic project{% elif s.type == 'competition_event' %}Case competition / event{% elif s.type == 'research_academic' %}Research / dissertation / paper{% elif s.type == 'personal_side' %}Personal / side project{% else %}{{ s.type }}{% endif %} · {{ s.deadline or 'No deadline' }}
+                </p>
+                <div class="mt-2">
+                    <a href="{{ url_for('survey_detail', survey_id=s.id) }}" class="btn btn-outline-primary btn-sm">
+                        View
+                    </a>
+                    <a href="{{ url_for('edit_survey', survey_id=s.id) }}" class="btn btn-outline-secondary btn-sm ms-2">
+                        Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>You haven't posted any surveys yet. <a href="{{ url_for('create_survey') }}">Post one</a>.</p>
+{% endif %}
+{% endblock %}

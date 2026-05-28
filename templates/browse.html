@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-3">Browse surveys</h2>
+
+<form method="GET" class="row g-2 mb-4">
+  <div class="col-md-2">
+    <label class="form-label">Space</label>
+    <select name="space" class="form-select">
+      <option value="">Any</option>
+      <option value="case_comps" {% if space_filter == 'case_comps' %}selected{% endif %}>Case comps</option>
+      <option value="college_surveys" {% if space_filter == 'college_surveys' %}selected{% endif %}>College surveys</option>
+      <option value="general_research" {% if space_filter == 'general_research' %}selected{% endif %}>General research</option>
+      <option value="self_projects" {% if space_filter == 'self_projects' %}selected{% endif %}>Self projects</option>
+    </select>
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-label">Type</label>
+    <select name="type" class="form-select">
+      <option value="">Any</option>
+      <option value="course_project" {% if type_filter == 'course_project' %}selected{% endif %}>Course / academic project</option>
+      <option value="competition_event" {% if type_filter == 'competition_event' %}selected{% endif %}>Case competition / event</option>
+      <option value="research_academic" {% if type_filter == 'research_academic' %}selected{% endif %}>Research / dissertation / paper</option>
+      <option value="personal_side" {% if type_filter == 'personal_side' %}selected{% endif %}>Personal / side project</option>
+    </select>
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-label">Domain</label>
+    <input type="text" name="domain" class="form-control"
+           value="{{ domain_filter or '' }}" placeholder="marketing, ops, etc.">
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-label">College</label>
+    <input type="text" name="college" class="form-control"
+           value="{{ college_filter or '' }}" placeholder="Any college">
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-label">Time</label>
+    <select name="time" class="form-select">
+      <option value="">Any</option>
+      <option value="<3" {% if time_filter == '<3' %}selected{% endif %}>&lt;3 min</option>
+      <option value="3-5" {% if time_filter == '3-5' %}selected{% endif %}>3–5 min</option>
+      <option value="5-10" {% if time_filter == '5-10' %}selected{% endif %}>5–10 min</option>
+    </select>
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-label">Sort</label>
+    <div class="d-flex gap-2 align-items-center">
+      <select name="sort" class="form-select">
+        <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+        <option value="closing" {% if sort == 'closing' %}selected{% endif %}>Closing soon</option>
+      </select>
+      <div class="form-check ms-1">
+        <input class="form-check-input" type="checkbox" name="open_only" value="1"
+               {% if open_only == '1' %}checked{% endif %}>
+        <label class="form-check-label">Open</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 mt-2">
+    <button type="submit" class="btn btn-primary">Apply filters</button>
+    <a href="{{ url_for('browse') }}" class="btn btn-outline-secondary btn-sm ms-2">Clear</a>
+  </div>
+</form>
+
+{% if surveys %}
+  <div class="row row-cols-1 row-cols-md-2 g-3">
+    {% for s in surveys %}
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a href="{{ url_for('survey_detail', survey_id=s.id) }}" class="text-decoration-none">
+                {{ s.title }}
+              </a>
+            </h5>
+            <p class="mb-1">
+              <span class="badge bg-info text-dark">{{ s.space or 'General' }}</span>
+              <span class="badge bg-secondary">
+                {% if s.type == 'course_project' %}Course / academic project{% elif s.type == 'competition_event' %}Case competition / event{% elif s.type == 'research_academic' %}Research / dissertation / paper{% elif s.type == 'personal_side' %}Personal / side project{% else %}{{ s.type }}{% endif %}
+              </span>
+              {% if s.time_estimate %}
+              <span class="badge bg-light text-dark">{{ s.time_estimate }} min</span>
+              {% endif %}
+            </p>
+            <p class="mb-1 small text-muted">
+              {{ s.college or 'Any college' }} ·
+              {% if s.domain_tags %}{{ s.domain_tags }}{% else %}No domains{% endif %}
+            </p>
+            {% if s.deadline %}
+              <p class="mb-1 small text-muted">Deadline: {{ s.deadline }}</p>
+            {% endif %}
+            <p class="card-text mt-2">
+              {{ s.description[:180] }}{% if s.description and s.description|length > 180 %}...{% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No surveys match your filters. Try clearing filters or be the first to
+    <a href="{{ url_for('create_survey') }}">post one</a>.
+  </p>
+{% endif %}
+
+{% endblock %}

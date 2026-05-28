@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Create survey</h1>
+<form method="post">
+    <div class="mb-3">
+        <label>Title <span class="text-danger">*</span></label>
+        <input type="text" name="title" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Description <span class="text-danger">*</span></label>
+        <textarea name="description" class="form-control" rows="4" required></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label>External survey link (Google Form, etc.) <span class="text-danger">*</span></label>
+        <input type="url" name="external_link" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Purpose / Type <span class="text-danger">*</span></label>
+        <select name="type" class="form-select" required>
+            <option value="">Select type</option>
+            <option value="course_project">Course / academic project</option>
+            <option value="competition_event">Case competition / event</option>
+            <option value="research_academic">Research / dissertation / paper</option>
+            <option value="personal_side">Personal / side project</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Space <span class="text-danger">*</span></label>
+        <select name="space" class="form-select" required>
+            <option value="">Select space</option>
+            <option value="case_comps">Case comps & related surveys</option>
+            <option value="college_surveys">College / academic surveys</option>
+            <option value="general_research">General research</option>
+            <option value="self_projects">Self / side project surveys</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Domain tags</label>
+        <input type="text" name="domain_tags" class="form-control" placeholder="marketing, ops (optional)">
+    </div>
+
+    <div class="mb-3">
+        <label>Target audience</label>
+        <input type="text" name="target_audience" class="form-control" placeholder="Teams, students, researchers, etc.">
+    </div>
+
+    <div class="mb-3">
+        <label>Time estimate</label>
+        <input type="text" name="time_estimate" class="form-control" placeholder="<3, 3-5, 5-10 (optional)">
+    </div>
+
+    <div class="mb-3">
+        <label>College</label>
+        <input type="text" name="college" class="form-control" placeholder="Optional; defaults to your profile college">
+    </div>
+
+    <div class="mb-3">
+        <label>Context info</label>
+        <input type="text" name="context_info" class="form-control" placeholder="Optional context for respondents">
+    </div>
+
+    <div class="mb-4">
+        <label>Deadline</label>
+        <input type="date" name="deadline" class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Post survey</button>
+</form>
+{% endblock %}
