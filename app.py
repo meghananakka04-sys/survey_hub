@@ -151,7 +151,6 @@ def browse():
     time_filter = request.args.get('time')
     sort = request.args.get('sort', 'newest')
     open_only = request.args.get('open_only')
-
     query = Survey.query
     if space_filter:
         query = query.filter(Survey.space == space_filter)
@@ -165,16 +164,29 @@ def browse():
         query = query.filter(Survey.time_estimate == time_filter)
     if open_only == '1':
         query = query.filter(Survey.is_open == True)
-
     if sort == 'closing':
         query = query.order_by(Survey.deadline.asc().nulls_last())
     else:
         query = query.order_by(Survey.created_at.desc())
-
     surveys = query.all()
+    # Group surveys by space (category)
+    categories = {}
+    for s in surveys:
+        space_key = s.space or 'general'
+        categories.setdefault(space_key, []).append(s)
+    # Define display names for spaces
+    space_labels = {
+        'case_comps': 'Case comps',
+        'college_surveys': 'College surveys',
+        'general_research': 'General research',
+        'self_projects': 'Self projects',
+        'general': 'General'
+    }
     return render_template(
         'browse.html',
         surveys=surveys,
+        categories=categories,
+        space_labels=space_labels,
         space_filter=space_filter,
         type_filter=type_filter,
         domain_filter=domain_filter,

@@ -69,40 +69,57 @@
 </form>
 
 {% if surveys %}
-  <div class="row row-cols-1 row-cols-md-2 g-3">
-    {% for s in surveys %}
-      <div class="col">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">
-              <a href="{{ url_for('survey_detail', survey_id=s.id) }}" class="text-decoration-none">
-                {{ s.title }}
-              </a>
-            </h5>
-            <p class="mb-1">
-              <span class="badge bg-info text-dark">{{ s.space or 'General' }}</span>
-              <span class="badge bg-secondary">
-                {% if s.type == 'course_project' %}Course / academic project{% elif s.type == 'competition_event' %}Case competition / event{% elif s.type == 'research_academic' %}Research / dissertation / paper{% elif s.type == 'personal_side' %}Personal / side project{% else %}{{ s.type }}{% endif %}
-              </span>
-              {% if s.time_estimate %}
-              <span class="badge bg-light text-dark">{{ s.time_estimate }} min</span>
+  {# Grouped by space (category) #}
+  {% for space_key, category_surveys in categories.items() %}
+    <h5 class="mt-4 mb-3 text-uppercase small fw-bold">
+      {{ space_labels.get(space_key, space_key) }}
+    </h5>
+
+    <div class="row mb-4">
+      {% for s in category_surveys %}
+        <div class="col-md-6 col-lg-4 mb-3">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title mb-1">
+                <a href="{{ url_for('survey_detail', survey_id=s.id) }}" class="text-decoration-none">
+                  {{ s.title }}
+                </a>
+              </h5>
+
+              <p class="mb-1">
+                <span class="badge bg-secondary">
+                  {% if s.type == 'course_project' %}Course / academic project{% elif s.type == 'competition_event' %}Case competition / event{% elif s.type == 'research_academic' %}Research / dissertation / paper{% elif s.type == 'personal_side' %}Personal / side project{% else %}{{ s.type }}{% endif %}
+                </span>
+                {% if s.time_estimate %}
+                  <span class="badge bg-light text-dark">{{ s.time_estimate }} min</span>
+                {% endif %}
+              </p>
+
+              <p class="mb-1 small text-light-75">
+                {{ s.college or 'Any college' }} ·
+                {% if s.domain_tags %}{{ s.domain_tags }}{% else %}No domains{% endif %}
+              </p>
+
+              {% if s.deadline %}
+                <p class="mb-1 small text-light-75">Deadline: {{ s.deadline }}</p>
               {% endif %}
-            </p>
-            <p class="mb-1 small text-muted">
-              {{ s.college or 'Any college' }} ·
-              {% if s.domain_tags %}{{ s.domain_tags }}{% else %}No domains{% endif %}
-            </p>
-            {% if s.deadline %}
-              <p class="mb-1 small text-muted">Deadline: {{ s.deadline }}</p>
-            {% endif %}
-            <p class="card-text mt-2">
-              {{ s.description[:180] }}{% if s.description and s.description|length > 180 %}...{% endif %}
-            </p>
+
+              <p class="card-text mt-2 card-description small">
+                {{ s.description }}
+              </p>
+
+              <div class="mt-auto">
+                <a href="{{ url_for('survey_detail', survey_id=s.id) }}"
+                   class="btn btn-primary btn-sm">
+                  View survey
+                </a>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    {% endfor %}
-  </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
 {% else %}
   <p>No surveys match your filters. Try clearing filters or be the first to
     <a href="{{ url_for('create_survey') }}">post one</a>.
